@@ -4,7 +4,14 @@ module.exports = {
     "./src/**/*.{html,ts}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        neonViolet: '#9b5de5',
+        neonLime: '#baff29',
+        darkBackground: '#1e1e2f',
+        darkCard: '#28293d',
+      }
+    }
   },
   plugins: [],
 }
