@@ -1,1 +1,51 @@
-<p>article works!</p>
+<div class="dark p-[16px] grid grid-cols-1 gap-10 h-full dark:bg-darkBackground">
+  
+    <!-- Artikel-Liste mit DataTable -->
+    <div class="bg-white dark:bg-darkCard shadow-lg p-5 rounded-lg col-span-1 flex flex-col">
+      <h2 class="text-xl font-semibold mb-5 text-neonViolet">Lagerbestandsübersicht</h2>
+      
+      <p-table [value]="inventoryData" [rows]="10" [rowsPerPageOptions]="[10, 20, 50]">
+        <ng-template pTemplate="header">
+          <tr>
+            <th class="dark:bg-darkCard dark:text-neonLime">Artikelname</th>
+            <th class="dark:bg-darkCard dark:text-neonLime">Beschreibung</th>
+            <th class="dark:bg-darkCard dark:text-neonLime">Lagerbestand</th>
+            <th class="dark:bg-darkCard dark:text-neonLime">Preis</th>
+            <th class="dark:bg-darkCard dark:text-neonLime">Aktionen</th>
+          </tr>
+        </ng-template>
+  
+        <ng-template pTemplate="body" let-item>
+          <tr>
+            <td class="dark:bg-darkCard dark:text-white">{{ item.name }}</td>
+            <td class="dark:bg-darkCard dark:text-white">{{ item.description }}</td>
+            <td class="dark:bg-darkCard dark:text-white">{{ item.stock }}</td>
+            <td class="dark:bg-darkCard dark:text-white">{{ item.price | currency }}</td>
+            <td class="dark:bg-darkCard">
+              <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm text-neonLime"></button>
+              <button pButton icon="pi pi-trash" class="p-button-text p-button-sm text-red-500"></button>
+            </td>
+          </tr>
+        </ng-template>
+  
+        <ng-template pTemplate="footer">
+          <tr>
+            <td colspan="5" class="dark:bg-darkCard dark:text-white text-right">
+              Total Items: {{ inventoryData.length }}
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+  
+      <!-- Dark Mode Paginator -->
+      <p-paginator 
+        class="dark:bg-darkCard dark:text-white mt-auto" 
+        [rows]="10" 
+        [totalRecords]="inventoryData.length" 
+        [rowsPerPageOptions]="[10, 20, 50]" 
+        styleClass="text-sm dark:text-white dark:bg-darkCard"
+      ></p-paginator>
+  
+    </div>
+  </div>
+  
