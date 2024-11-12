@@ -1,0 +1,48 @@
+<div class="dark p-[16px] grid grid-cols-1 gap-10 h-full dark:bg-darkBackground">
+  
+    <!-- Kundeninformation mit Bearbeitungsoption -->
+    <div class="bg-white dark:bg-darkCard shadow-lg p-5 rounded-lg col-span-1 flex flex-col">
+      <h2 class="text-xl font-semibold mb-5 text-neonViolet">Kundeninformation</h2>
+
+      <!-- Anzeige der Kundendaten -->
+      <div *ngIf="!isEditMode" class="text-white dark:text-white">
+        <p><strong class="text-neonLime">Name:</strong> {{ customerData.name }}</p>
+        <p><strong class="text-neonLime">Email:</strong> {{ customerData.email }}</p>
+        <p><strong class="text-neonLime">Telefon:</strong> {{ customerData.phone }}</p>
+        <p><strong class="text-neonLime">Adresse:</strong> {{ customerData.address }}</p>
+        
+        <!-- Bearbeiten-Button -->
+        <button pButton label="Bearbeiten" icon="pi pi-pencil" (click)="toggleEditMode()"
+          class="p-button-sm text-neonLime mt-4"></button>
+      </div>
+
+      <!-- Bearbeitungsformular -->
+      <div *ngIf="isEditMode" class="text-white dark:text-white">
+        <div class="mb-3">
+          <label for="name" class="text-neonLime">Name:</label>
+          <input id="name" type="text" [(ngModel)]="customerData.name" class="p-inputtext dark:bg-darkCard dark:text-white"/>
+        </div>
+        <div class="mb-3">
+          <label for="email" class="text-neonLime">Email:</label>
+          <input id="email" type="email" [(ngModel)]="customerData.email" class="p-inputtext dark:bg-darkCard dark:text-white"/>
+        </div>
+        <div class="mb-3">
+          <label for="phone" class="text-neonLime">Telefon:</label>
+          <input id="phone" type="text" [(ngModel)]="customerData.phone" class="p-inputtext dark:bg-darkCard dark:text-white"/>
+        </div>
+        <div class="mb-3">
+          <label for="address" class="text-neonLime">Adresse:</label>
+          <input id="address" type="text" [(ngModel)]="customerData.address" class="p-inputtext dark:bg-darkCard dark:text-white"/>
+        </div>
+
+        <!-- Buttons zum Speichern und Abbrechen -->
+        <div class="flex gap-3 mt-4">
+          <button pButton label="Speichern" icon="pi pi-check" (click)="saveChanges()"
+            class="p-button-sm text-neonLime"></button>
+          <button pButton label="Abbrechen" icon="pi pi-times" (click)="cancelEdit()"
+            class="p-button-sm text-red-500"></button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
