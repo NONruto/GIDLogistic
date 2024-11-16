@@ -1,13 +1,14 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms'; 
 import { HttpClientModule } from '@angular/common/http'; // Ensure this is imported
-import { AuthService } from '../services/auth.service'; // Import your AuthService
+import { AccountService } from '../../../swagger';
+
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
-  providers: [AuthService], // Ensure AuthService is provided
+  providers: [AccountService],
   standalone: true,
   imports: [FormsModule, HttpClientModule] // Ensure HttpClientModule is in imports
 })
@@ -16,12 +17,13 @@ export class LoginComponent {
   password: string = '';
   rememberMe: boolean = false;
 
-  constructor(private authService: AuthService) {}
+  constructor(private acoountService: AccountService) {}
 
   onLogin(): void {
-    this.authService.login(this.username, this.password)
+    this.acoountService.apiAccountLoginGet({ username: this.username, password: this.password })
       .subscribe(
         (response) => {
+          console.log("statusCode", response.status)
           console.log("Login successful:", response);
         },
         (error) => {
