@@ -17,7 +17,7 @@ import { CustomHttpUrlEncodingCodec }                        from '../encoder';
 
 import { Observable }                                        from 'rxjs';
 
-import { User } from '../model/user';
+import { UserDto } from '../model/userDto';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -58,20 +58,67 @@ export class AccountService {
     /**
      * 
      * 
-     * @param model 
+     * @param id 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiAccountLoginGet(model?: User, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public apiAccountLoginGet(model?: User, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public apiAccountLoginGet(model?: User, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public apiAccountLoginGet(model?: User, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public apiAccountIdGet(id: number, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public apiAccountIdGet(id: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public apiAccountIdGet(id: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public apiAccountIdGet(id: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling apiAccountIdGet.');
+        }
 
         let headers = this.defaultHeaders;
-        if (model !== undefined && model !== null) {
-            headers = headers.set('model', String(model));
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+        ];
+
+        return this.httpClient.request<any>('get',`${this.basePath}/api/Account/${encodeURIComponent(String(id))}`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * 
+     * 
+     * @param username 
+     * @param password 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public apiAccountLoginGet(username?: string, password?: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public apiAccountLoginGet(username?: string, password?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public apiAccountLoginGet(username?: string, password?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public apiAccountLoginGet(username?: string, password?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+
+
+        let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
+        if (username !== undefined && username !== null) {
+            queryParameters = queryParameters.set('Username', <any>username);
+        }
+        if (password !== undefined && password !== null) {
+            queryParameters = queryParameters.set('Password', <any>password);
+        }
+
+        let headers = this.defaultHeaders;
 
         // to determine the Accept header
         let httpHeaderAccepts: string[] = [
@@ -87,6 +134,7 @@ export class AccountService {
 
         return this.httpClient.request<any>('get',`${this.basePath}/api/Account/Login`,
             {
+                params: queryParameters,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -102,10 +150,10 @@ export class AccountService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiAccountRegisterPost(body?: User, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public apiAccountRegisterPost(body?: User, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public apiAccountRegisterPost(body?: User, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public apiAccountRegisterPost(body?: User, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public apiAccountRegisterPost(body?: UserDto, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public apiAccountRegisterPost(body?: UserDto, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public apiAccountRegisterPost(body?: UserDto, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public apiAccountRegisterPost(body?: UserDto, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
 
         let headers = this.defaultHeaders;

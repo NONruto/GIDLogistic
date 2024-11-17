@@ -12,7 +12,7 @@ export class Configuration {
     username?: string;
     password?: string;
     accessToken?: string | (() => string);
-    basePath?: string;
+    basePath?: string = 'https://localhost:7021';
     withCredentials?: boolean = true;
 
     constructor(configurationParameters: ConfigurationParameters = {}) {

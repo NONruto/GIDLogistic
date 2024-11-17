@@ -11,7 +11,7 @@
  */
 
 export interface Address { 
-    id?: string;
+    id?: number;
     street?: string;
     houseNumber?: number;
     postcode?: number;

@@ -9,10 +9,8 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
-import { Address } from './address';
 
-export interface Supplier { 
-    id?: number;
-    name?: string;
-    address?: Address;
+export interface UserDto { 
+    username?: string;
+    password?: string;
 }

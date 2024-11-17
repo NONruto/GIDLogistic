@@ -1,39 +1,40 @@
-<!-- Dashboard mit Tabellen und Diagrammen im Dark Mode -->
-<div class="dark p-[16px] grid grid-cols-2 gap-10 h-full dark:bg-darkBackground">
-  
-    <!-- Graph 1: Sales by Region -->
-    <div class="bg-white dark:bg-darkCard shadow-lg p-5 rounded-lg">
-      <h2 class="text-xl font-semibold mb-5 text-neonViolet">Sales by Region</h2>
-      <p-chart type="bar" [data]="salesData" [options]="chartOptions"></p-chart>
-    </div>
-    
-    <!-- Graph 2: Top 5 Products Sold -->
-    <div class="bg-white dark:bg-darkCard shadow-lg p-5 rounded-lg">
-      <h2 class="text-xl font-semibold mb-5 text-neonViolet">Top 5 Products Sold</h2>
-      <p-chart type="doughnut" [data]="productData" [options]="chartOptions"></p-chart>
-    </div>
-    
-    <!-- Table: Sales Data -->
-    <div class="bg-white dark:bg-darkCard shadow-lg p-5 rounded-lg col-span-2">
-      <h2 class="text-xl font-semibold mb-5 text-neonViolet">Sales Data</h2>
-      <p-table [value]="salesTableData">
-        <ng-template pTemplate="header">
-          <tr>
-            <th class="dark:bg-darkCard dark:text-neonLime">Product</th>
-            <th class="dark:bg-darkCard dark:text-neonLime">Units Sold</th>
-            <th class="dark:bg-darkCard dark:text-neonLime">Region</th>
-            <th class="dark:bg-darkCard dark:text-neonLime">Total Revenue</th>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-sale>
-          <tr>
-            <td class="dark:bg-darkCard dark:text-white">{{ sale.product }}</td>
-            <td class="dark:bg-darkCard dark:text-white">{{ sale.units }}</td>
-            <td class="dark:bg-darkCard dark:text-white">{{ sale.region }}</td>
-            <td class="dark:bg-darkCard dark:text-white">{{ sale.revenue }}</td>
-          </tr>
-        </ng-template>
-      </p-table>
-    </div>
+<div class="p-6 bg-gray-100 min-h-screen">
+  <h1 class="text-3xl font-bold mb-6 text-center">Dashboard</h1>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <!-- Kundenübersicht -->
+    <p-card class="bg-white shadow-lg rounded-lg" header="Kunden" styleClass="customer-card">
+      <ul class="list-none p-0">
+        <li *ngFor="let customer of customers" class="py-2 border-b border-gray-200">
+          <div class="text-gray-800 font-semibold">{{ customer.customerName }}</div>
+          <div class="text-gray-600">
+            Adresse: {{ customer.address?.street }} {{ customer.address?.houseNumber }}, {{ customer.address?.postcode }}
+          </div>
+        </li>
+      </ul>
+    </p-card>
+
+    <!-- Produktübersicht -->
+    <p-card class="bg-blue-50 shadow-lg rounded-lg" header="Produkte" styleClass="product-card">
+      <ul class="list-none p-0">
+        <li *ngFor="let product of products" class="py-2 border-b border-gray-200">
+          <div class="text-gray-800 font-semibold">{{ product.productName }}</div>
+          <div class="text-gray-600">Bestand: {{ product.inventory }}</div>
+          <div class="text-gray-600">Preis: {{ product.price | currency }}</div>
+        </li>
+      </ul>
+    </p-card>
+
+    <!-- Lieferantenübersicht -->
+    <p-card class="bg-green-50 shadow-lg rounded-lg" header="Lieferanten" styleClass="supplier-card">
+      <ul class="list-none p-0">
+        <li *ngFor="let supplier of suppliers" class="py-2 border-b border-gray-200">
+          <div class="text-gray-800 font-semibold">{{ supplier.name }}</div>
+          <div class="text-gray-600">
+            Adresse: {{ supplier.address?.street }} {{ supplier.address?.houseNumber }}, {{ supplier.address?.postcode }}
+          </div>
+        </li>
+      </ul>
+    </p-card>
   </div>
-  
+</div>

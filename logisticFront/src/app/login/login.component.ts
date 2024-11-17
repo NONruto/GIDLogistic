@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms'; 
 import { HttpClientModule } from '@angular/common/http'; // Ensure this is imported
 import { AccountService } from '../../../swagger';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -17,14 +18,18 @@ export class LoginComponent {
   password: string = '';
   rememberMe: boolean = false;
 
-  constructor(private acoountService: AccountService) {}
+  constructor(private acoountService: AccountService, private router:Router) {}
 
   onLogin(): void {
-    this.acoountService.apiAccountLoginGet({ username: this.username, password: this.password })
+    this.acoountService.apiAccountLoginGet(this.username, this.password)
       .subscribe(
         (response) => {
-          console.log("statusCode", response.status)
-          console.log("Login successful:", response);
+          var status = response.status;
+          if (status == 200) {
+            console.log("Login successful. Redirecting...");
+            this.router.navigate(['/dashboard']);
+          }
+          console.log("Debug:", response);
         },
         (error) => {
           console.error("Login failed:", error);
