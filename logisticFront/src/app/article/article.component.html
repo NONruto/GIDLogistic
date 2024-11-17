@@ -6,7 +6,7 @@
     [rowsPerPageOptions]="[5, 10, 20]"
     [loading]="loading"
     [paginator]="true"
-    [globalFilterFields]="['productNumber', 'productName', 'productDescription', 'inventory', 'price']"
+    [globalFilterFields]="['productNumber', 'productName', 'productDescription', 'inventory', 'supplier.name', 'price']"
     [tableStyle]="{ 'min-width': '75rem' }"
 >
     <!-- Globaler Filter -->
@@ -33,6 +33,7 @@
             <th pSortableColumn="productName">Produktname <p-sortIcon field="productName"></p-sortIcon></th>
             <th pSortableColumn="productDescription">Beschreibung <p-sortIcon field="productDescription"></p-sortIcon></th>
             <th pSortableColumn="inventory">Bestand <p-sortIcon field="inventory"></p-sortIcon></th>
+            <th pSortableColumn="supplier">Lieferant <p-sortIcon field="supplier"></p-sortIcon></th>
             <th pSortableColumn="price">Preis <p-sortIcon field="price"></p-sortIcon></th>
         </tr>
         <tr>
@@ -71,6 +72,14 @@
             <th>
                 <p-columnFilter
                     type="text"
+                    field="supplier"
+                    placeholder="Filter Lieferant"
+                    ariaLabel="Filter Lieferant"
+                ></p-columnFilter>
+            </th>
+            <th>
+                <p-columnFilter
+                    type="text"
                     field="price"
                     placeholder="Filter Preis"
                     ariaLabel="Filter Preis"
@@ -86,6 +95,7 @@
             <td>{{ product.productName }}</td>
             <td>{{ product.productDescription }}</td>
             <td>{{ product.inventory }}</td>
+            <td>{{ product.supplier?.name }}</td>
             <td>{{ product.price | currency }}</td>
         </tr>
     </ng-template>
@@ -98,31 +108,146 @@
     </ng-template>
 </p-table>
 
-<!-- Dialog zum Hinzufügen eines neuen Produkts -->
-<p-dialog [(visible)]="productDialog" header="Neues Produkt hinzufügen" [modal]="true" [closable]="true">
-    <div class="p-fluid">
-        <div class="p-field">
-            <label for="productName">Produktname</label>
-            <input id="productName" type="text" pInputText [(ngModel)]="newProduct.productName" />
+<!-- Dialog zum Hinzufügen eines neuen Produkts und Lieferanten -->
+<p-dialog
+    [(visible)]="productDialog"
+    header="Neues Produkt hinzufügen"
+    [modal]="true"
+    [closable]="true"
+    [style]="{ width: '800px' }"
+    class="bg-white rounded-lg shadow-lg p-6"
+>
+    <div class="grid grid-cols-2 gap-6">
+        <!-- Produktfelder -->
+        <div>
+            <div class="mb-4">
+                <label for="productName" class="block font-semibold mb-1">Produktname *</label>
+                <input
+                    id="productName"
+                    type="text"
+                    pInputText
+                    [(ngModel)]="newProduct.productName"
+                    class="w-full p-2 border rounded-lg"
+                    placeholder="Produktname eingeben"
+                    required
+                />
+            </div>
+            <div class="mb-4">
+                <label for="productDescription" class="block font-semibold mb-1 border-t border-transparent">Beschreibung *</label>
+                <input
+                    id="productDescription"
+                    type="text"
+                    pInputText
+                    [(ngModel)]="newProduct.productDescription"
+                    class="w-full p-2 border rounded-lg"
+                    placeholder="Produktbeschreibung eingeben"
+                    required
+                />
+            </div>
+            <div class="mb-4">
+                <label for="inventory" class="block font-semibold mb-1">Bestand *</label>
+                <input
+                    id="inventory"
+                    type="number"
+                    pInputText
+                    [(ngModel)]="newProduct.inventory"
+                    class="w-full p-2 border rounded-lg"
+                    placeholder="Bestand eingeben"
+                    required
+                />
+            </div>
+            <div class="mb-4">
+                <label for="price" class="block font-semibold mb-1">Preis *</label>
+                <input
+                    id="price"
+                    type="number"
+                    pInputText
+                    [(ngModel)]="newProduct.price"
+                    class="w-full p-2 border rounded-lg"
+                    placeholder="Preis eingeben"
+                    required
+                />
+            </div>
         </div>
-        <div class="p-field">
-            <label for="productDescription">Beschreibung</label>
-            <input id="productDescription" type="text" pInputText [(ngModel)]="newProduct.productDescription" />
-        </div>
-        <div class="p-field">
-            <label for="inventory">Bestand</label>
-            <input id="inventory" type="number" pInputText [(ngModel)]="newProduct.inventory" />
-        </div>
-        <div class="p-field">
-            <label for="price">Preis</label>
-            <input id="price" type="number" pInputText [(ngModel)]="newProduct.price" />
+
+        <!-- Lieferantenfelder -->
+        <div>
+            <div class="mb-4">
+                <label for="supplier" class="block font-semibold mb-1">Lieferant auswählen *</label>
+                <p-dropdown
+                    [options]="suppliers"
+                    [(ngModel)]="newProduct.supplier"
+                    optionLabel="name"
+                    [showClear]="true"
+                    placeholder="Neuer Lieferant"
+                    class="w-full p-2 h-[42px] flex [&>*:first-child]:w-full [&>*:first-child]:flex [&>*:first-child]:items-center border rounded-lg"
+                    required
+                ></p-dropdown>
+            </div>
+
+            <!-- Neuer Lieferant -->
+            <div *ngIf="(newSupplier.address && newProduct.supplier == undefined)" class="border-t">
+                <div class="mb-4">
+                    <label for="supplierName" class="block font-semibold mb-1">Neuer Lieferantenname *</label>
+                    <input
+                        id="supplierName"
+                        type="text"
+                        pInputText
+                        [(ngModel)]="newSupplier.name"
+                        class="w-full p-2 border rounded-lg"
+                        placeholder="Lieferantenname eingeben"
+                        required
+                    />
+                </div>
+                <div class="mb-4">
+                    <label for="supplierAddress" class="block font-semibold mb-1">Adresse *</label>
+                    <input
+                        id="supplierAddress"
+                        type="text"
+                        pInputText
+                        [(ngModel)]="newSupplier.address.street"
+                        class="w-full p-2 border rounded-lg mb-2"
+                        placeholder="Straße"
+                        required
+                    />
+                    <div class="flex gap-2">
+                        <input
+                            type="number"
+                            pInputText
+                            [(ngModel)]="newSupplier.address.houseNumber"
+                            class="w-1/3 p-2 border rounded-lg"
+                            placeholder="Hausnummer"
+                            required
+                        />
+                        <input
+                            type="number"
+                            pInputText
+                            [(ngModel)]="newSupplier.address.postcode"
+                            class="w-1/3 p-2 border rounded-lg"
+                            placeholder="Postleitzahl"
+                            required
+                        />
+                        <input
+                            type="text"
+                            pInputText
+                            [(ngModel)]="newSupplier.address.region"
+                            class="w-1/3 p-2 border rounded-lg"
+                            placeholder="Region"
+                            required
+                        />
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    <p-footer>
+
+    <p-footer class="flex justify-end gap-4">
         <button pButton label="Abbrechen" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
-        <button pButton label="Speichern" icon="pi pi-check" (click)="saveProduct()"></button>
+        <button pButton label="Speichern" icon="pi pi-check" class="p-button" (click)="saveProduct()"></button>
     </p-footer>
 </p-dialog>
+
+
 
 <!-- Button zum Öffnen des Dialogs -->
 <button pButton label="Neues Produkt hinzufügen" icon="pi pi-plus" class="mt-4" (click)="openNewProductDialog()"></button>

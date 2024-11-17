@@ -43,58 +43,99 @@ export class ArticleComponent {
   products: Product[] = [];
   suppliers: Supplier[] = [];
   newProduct: Product = {};
+  newSupplier: Supplier = {};
   productDialog: boolean = false;
+  supplierDialog: boolean = false;
   loading: boolean = true;
 
   constructor(private productService: GidLogisticsService) {}
 
   ngOnInit() {
-      // Produkte von der API laden
-      this.productService.apiGidLogisticsProductsGet().subscribe((data: Message) => {
-        console.log(data);
-          this.products = data.body;
-          this.loading = false;
-      });
+    // Produkte von der API laden
+    this.productService.apiGidLogisticsProductsGet().subscribe((data: Message) => {
+      console.log(data);
+      this.products = data.body;
+      this.loading = false;
+    });
 
-      // Beispielhafte Lieferanten (Dummy-Daten)
-      this.suppliers = [
-          { id: 1, name: 'Supplier A', address: { street: 'Street 1', houseNumber: 1, postcode: 12345, region: 'Region A' } },
-          { id: 2, name: 'Supplier B', address: { street: 'Street 2', houseNumber: 2, postcode: 67890, region: 'Region B' } }
-      ];
+    this.productService.apiGidLogisticsSupplierGet().subscribe((data: Message) => {
+      console.log(data);
+      this.suppliers = data.body;
+      this.loading = false;
+    });
+
+
   }
 
   // Dialog öffnen
   openNewProductDialog() {
-      this.newProduct = {};
-      this.productDialog = true;
+    this.newSupplier = {
+      id: undefined,
+      name: undefined,
+      address: {
+        street: undefined,
+        houseNumber: undefined,
+        postcode: undefined,
+        region: undefined
+      }
+    };
+    this.newProduct = {};
+    console.log(this.newProduct.supplier);
+    this.productDialog = true;
+  }
+
+  // Neuen Lieferanten-Dialog öffnen
+  openNewSupplierDialog() {
+
+    this.supplierDialog = true;
   }
 
   // Dialog schließen
   hideDialog() {
-      this.productDialog = false;
+    this.productDialog = false;
+    this.supplierDialog = false;
   }
 
   // Neues Produkt speichern
   saveProduct() {
-      if (this.newProduct.productName && this.newProduct.price) {
-          this.products.push({ ...this.newProduct });
-          this.productDialog = false;
-      }
+    if (this.newSupplier.name && this.newSupplier.address && this.newSupplier.address.street && this.newSupplier.address.houseNumber && this.newSupplier.address.postcode && this.newSupplier.address.region) {
+      this.newProduct.supplier = this.newSupplier;
+    }
+    if (
+      this.newProduct.productName &&
+      this.newProduct.productDescription &&
+      this.newProduct.inventory &&
+      this.newProduct.price &&
+      this.newProduct.supplier
+    ) {
+      console.log(this.newProduct);
+      this.productService.apiGidLogisticsCreateProductPost(this.newProduct).subscribe(
+        (data: Message) => {
+          console.log(data);
+        },
+        (error) => {
+          console.error('Fehler aufgetreten:', error);
+        }
+      );
+      this.productDialog = false;
+    } else {
+      alert('Bitte füllen Sie alle Felder aus.');
+    }
   }
 
   // Filter zurücksetzen
   clear(table: Table) {
-      table.clear();
+    table.clear();
   }
 
   // Schweregrad basierend auf dem Produktbestand
   getSeverity(inventory: number) {
-      if (inventory > 50) {
-          return 'success';
-      } else if (inventory > 20) {
-          return 'warning';
-      } else {
-          return 'danger';
-      }
+    if (inventory > 50) {
+      return 'success';
+    } else if (inventory > 20) {
+      return 'warning';
+    } else {
+      return 'danger';
+    }
   }
 }

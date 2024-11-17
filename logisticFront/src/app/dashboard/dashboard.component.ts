@@ -2,13 +2,19 @@ import { Component, OnInit } from '@angular/core';
 import { CardModule } from 'primeng/card';
 import { DividerModule } from 'primeng/divider';
 import { TableModule } from 'primeng/table';
-import { Customer, Product, Supplier } from '../../../swagger';
+import { Customer, GidLogisticsService, Message, Product, Supplier } from '../../../swagger';
 import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CardModule, DividerModule, TableModule, CommonModule],
+  imports: [CardModule, 
+    DividerModule, 
+    TableModule, 
+    CommonModule,
+    HttpClientModule],
+  providers: [GidLogisticsService],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
   styles: [`
@@ -26,6 +32,10 @@ export class DashboardComponent implements OnInit {
   suppliers: Supplier[] = [];
   currency: string = '€';
 
+  constructor(private productService: GidLogisticsService) { 
+
+  }
+
   ngOnInit(): void {
     // Beispiel-Daten (später durch API-Aufrufe ersetzt)
     this.customers = [
@@ -39,5 +49,21 @@ export class DashboardComponent implements OnInit {
     this.suppliers = [
       { id: 1, name: 'Lieferant X', address: { street: 'Lieferantenstraße', houseNumber: 10, postcode: 54321, region: 'Süd' } }
     ];
+
+    this.productService.apiGidLogisticsProductsGet().subscribe((data: Message) => {
+      console.log(data);
+      this.products = data.body;
+    });
+
+    this.productService.apiGidLogisticsSupplierGet().subscribe((data: Message) => {
+      console.log(data);
+      this.suppliers = data.body;
+    });
+
+    this.productService.apiGidLogisticsCustomerGet().subscribe((data: Message) => {
+      console.log(data);
+      this.customers = data.body;
+    });
+    
   }
 }
