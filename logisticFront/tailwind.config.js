@@ -13,6 +13,13 @@ module.exports = {
       }
     }
   },
-  plugins: [],
+  plugins: [
+    function ({ addVariant }) {
+      addVariant('child', '& > *');
+      addVariant('child-hover', '& > *:hover');
+      addVariant('first-child', '& > *:first-child');
+      addVariant('last-child', '& > *:last-child');
+  }
+],
 }
 

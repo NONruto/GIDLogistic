@@ -39,11 +39,11 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     // Beispiel-Daten (später durch API-Aufrufe ersetzt)
     this.customers = [
-      { customerId: 1, customerName: 'Max Mustermann', address: { street: 'Musterstraße', houseNumber: 1, postcode: 12345, region: 'Nord' } }
+      { id: 1, customerName: 'Max Mustermann', address: { street: 'Musterstraße', houseNumber: 1, postcode: 12345, region: 'Nord' } }
     ];
 
     this.products = [
-      { productNumber: 101, productName: 'Produkt A', inventory: 50, price: 19.99, productDescription: 'Beschreibung A' }
+      { id: 101, productName: 'Produkt A', inventory: 50, price: 19.99, productDescription: 'Beschreibung A' }
     ];
 
     this.suppliers = [

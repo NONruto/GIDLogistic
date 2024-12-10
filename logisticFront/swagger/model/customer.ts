@@ -12,7 +12,7 @@
 import { Address } from './address';
 
 export interface Customer { 
-    customerId?: number;
+    id?: number;
     address?: Address;
     customerName?: string;
 }

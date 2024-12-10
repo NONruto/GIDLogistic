@@ -4,3 +4,4 @@ export * from './product';
 export * from './supplier';
 export * from './userDto';
 export * from './message';
+export * from './searchResultDto'

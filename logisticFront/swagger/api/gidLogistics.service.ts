@@ -19,6 +19,7 @@ import { Observable }                                        from 'rxjs';
 
 import { Customer } from '../model/customer';
 import { Product } from '../model/product';
+import { SearchResultDto } from '../model/searchResultDto';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -263,6 +264,52 @@ export class GidLogisticsService {
 
         return this.httpClient.request<any>('get',`${this.basePath}/api/GidLogistics/Customer`,
             {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * 
+     * 
+     * @param searchTerm 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public apiGidLogisticsGlobalSearchGet(searchTerm?: string, observe?: 'body', reportProgress?: boolean): Observable<Array<SearchResultDto>>;
+    public apiGidLogisticsGlobalSearchGet(searchTerm?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<SearchResultDto>>>;
+    public apiGidLogisticsGlobalSearchGet(searchTerm?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<SearchResultDto>>>;
+    public apiGidLogisticsGlobalSearchGet(searchTerm?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+
+        let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
+        if (searchTerm !== undefined && searchTerm !== null) {
+            queryParameters = queryParameters.set('searchTerm', <any>searchTerm);
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'text/plain',
+            'application/json',
+            'text/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+        ];
+
+        return this.httpClient.request<Array<SearchResultDto>>('get',`${this.basePath}/api/GidLogistics/GlobalSearch`,
+            {
+                params: queryParameters,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,

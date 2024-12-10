@@ -1,9 +1,14 @@
+<style>
+.product-card{
+    height: 100% !important;
+}
+</style>
 <div class="p-6 bg-gray-100 min-h-screen">
   <h1 class="text-3xl font-bold mb-6 text-center">Dashboard</h1>
 
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
     <!-- Kundenübersicht -->
-    <p-card class="bg-white shadow-lg rounded-lg" header="Kunden" styleClass="customer-card">
+    <p-card class="bg-blue-50 shadow-lg rounded-lg max-h-[400px] child:h-full child:child:h-full child:child:overflow-auto" header="Kunden" styleClass="customer-card">
       <ul class="list-none p-0">
         <li *ngFor="let customer of customers" class="py-2 border-b border-gray-200">
           <div class="text-gray-800 font-semibold">{{ customer.customerName }}</div>
@@ -15,7 +20,7 @@
     </p-card>
 
     <!-- Produktübersicht -->
-    <p-card class="bg-blue-50 shadow-lg rounded-lg" header="Produkte" styleClass="product-card">
+    <p-card class="bg-blue-50 shadow-lg rounded-lg max-h-[400px] child:h-full child:child:h-full child:child:overflow-auto" header="Produkte" styleClass="product-card">
       <ul class="list-none p-0">
         <li *ngFor="let product of products" class="py-2 border-b border-gray-200">
           <div class="text-gray-800 font-semibold">{{ product.productName }}</div>
@@ -26,7 +31,7 @@
     </p-card>
 
     <!-- Lieferantenübersicht -->
-    <p-card class="bg-green-50 shadow-lg rounded-lg" header="Lieferanten" styleClass="supplier-card">
+    <p-card class="bg-blue-50 shadow-lg rounded-lg max-h-[400px] child:h-full child:child:h-full child:child:overflow-auto" header="Lieferanten" styleClass="supplier-card">
       <ul class="list-none p-0">
         <li *ngFor="let supplier of suppliers" class="py-2 border-b border-gray-200">
           <div class="text-gray-800 font-semibold">{{ supplier.name }}</div>

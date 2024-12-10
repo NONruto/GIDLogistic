@@ -35,7 +35,7 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './article.component.css',
   styles: [`
     :host {
-      @apply h-full block;
+      @apply h-full flex;
     }
   `]
 })
@@ -52,19 +52,23 @@ export class ArticleComponent {
 
   ngOnInit() {
     // Produkte von der API laden
-    this.productService.apiGidLogisticsProductsGet().subscribe((data: Message) => {
-      console.log(data);
-      this.products = data.body;
-      this.loading = false;
-    });
+    this.loadTableData();
 
-    this.productService.apiGidLogisticsSupplierGet().subscribe((data: Message) => {
-      console.log(data);
-      this.suppliers = data.body;
-      this.loading = false;
-    });
+  }
 
-
+  loadTableData() {
+        // Produkte von der API laden
+        this.productService.apiGidLogisticsProductsGet().subscribe((data: Message) => {
+          console.log(data);
+          this.products = data.body;
+          this.loading = false;
+        });
+    
+        this.productService.apiGidLogisticsSupplierGet().subscribe((data: Message) => {
+          console.log(data);
+          this.suppliers = data.body;
+          this.loading = false;
+        });
   }
 
   // Dialog öffnen
@@ -111,6 +115,7 @@ export class ArticleComponent {
       console.log(this.newProduct);
       this.productService.apiGidLogisticsCreateProductPost(this.newProduct).subscribe(
         (data: Message) => {
+          this.loadTableData();
           console.log(data);
         },
         (error) => {

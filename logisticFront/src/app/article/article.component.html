@@ -1,8 +1,10 @@
 <p-table
     #dt
     [value]="products"
+    class="bg-white rounded-[15px] overflow-hidden m-[15px]"
     dataKey="productNumber"
-    [rows]="10"
+    scrollable="true"
+    [rows]="5"
     [rowsPerPageOptions]="[5, 10, 20]"
     [loading]="loading"
     [paginator]="true"
@@ -11,8 +13,8 @@
 >
     <!-- Globaler Filter -->
     <ng-template pTemplate="caption">
-        <div class="flex">
-            <p-iconField iconPosition="left" class="ml-auto">
+        <div class="flex justify-between">
+            <p-iconField iconPosition="left" class="ml-4">
                 <p-inputIcon>
                     <i class="pi pi-search"></i>
                 </p-inputIcon>
@@ -23,6 +25,7 @@
                     placeholder="Suche nach Produkt"
                 />
             </p-iconField>
+            <button pButton label="Neues Produkt hinzufügen" icon="pi pi-plus" class="mr-2" (click)="openNewProductDialog()"></button>
         </div>
     </ng-template>
 
@@ -91,7 +94,7 @@
     <!-- Tabellenkörper -->
     <ng-template pTemplate="body" let-product>
         <tr>
-            <td>{{ product.productNumber }}</td>
+            <td>{{ product.id }}</td>
             <td>{{ product.productName }}</td>
             <td>{{ product.productDescription }}</td>
             <td>{{ product.inventory }}</td>
@@ -115,7 +118,7 @@
     [modal]="true"
     [closable]="true"
     [style]="{ width: '800px' }"
-    class="bg-white rounded-lg shadow-lg p-6"
+    class=""
 >
     <div class="grid grid-cols-2 gap-6">
         <!-- Produktfelder -->
@@ -250,4 +253,3 @@
 
 
 <!-- Button zum Öffnen des Dialogs -->
-<button pButton label="Neues Produkt hinzufügen" icon="pi pi-plus" class="mt-4" (click)="openNewProductDialog()"></button>

@@ -9,13 +9,9 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
-import { Supplier } from './supplier';
 
-export interface Product { 
-    id?: number;
-    productName?: string;
-    productDescription?: string;
-    inventory?: number;
-    supplier?: Supplier;
-    price?: number;
+export interface SearchResultDto { 
+    objectName?: string;
+    objectType?: string;
+    objectNumber?: string;
 }
