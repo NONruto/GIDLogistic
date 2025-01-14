@@ -1,48 +1,95 @@
-<div class="dark p-[16px] grid grid-cols-1 gap-10 h-full dark:bg-darkBackground">
-  
-    <!-- Kundeninformation mit Bearbeitungsoption -->
-    <div class="bg-white dark:bg-darkCard shadow-lg p-5 rounded-lg col-span-1 flex flex-col">
-      <h2 class="text-xl font-semibold mb-5 text-neonViolet">Kundeninformation</h2>
-
-      <!-- Anzeige der Kundendaten -->
-      <div *ngIf="!isEditMode" class="text-white dark:text-white">
-        <p><strong class="text-neonLime">Name:</strong> {{ customerData.name }}</p>
-        <p><strong class="text-neonLime">Email:</strong> {{ customerData.email }}</p>
-        <p><strong class="text-neonLime">Telefon:</strong> {{ customerData.phone }}</p>
-        <p><strong class="text-neonLime">Adresse:</strong> {{ customerData.address }}</p>
-        
-        <!-- Bearbeiten-Button -->
-        <button pButton label="Bearbeiten" icon="pi pi-pencil" (click)="toggleEditMode()"
-          class="p-button-sm text-neonLime mt-4"></button>
+  <p-table #dt [value]="customers" class="bg-white rounded-[15px] overflow-hidden m-[15px] w-full" dataKey="id" 
+    scrollable="true" [rows]="5" [rowsPerPageOptions]="[5, 10, 20]" [loading]="loading" [paginator]="true"
+    [globalFilterFields]="['customerName', 'address.street', 'address.region']" [tableStyle]="{ 'min-width': '75rem' }">
+    <!-- Globaler Filter -->
+    <ng-template pTemplate="caption">
+      <div class="flex justify-between">
+        <p-iconField iconPosition="left" class="ml-4">
+          <p-inputIcon>
+            <i class="pi pi-search"></i>
+          </p-inputIcon>
+          <input pInputText type="text" (input)="dt.filterGlobal($event.target, 'contains')"
+            placeholder="Suche nach Kunden" />
+        </p-iconField>
+        <button pButton label="Neuen Kunden hinzufügen" icon="pi pi-plus" class="mr-2"
+          (click)="openNewCustomerDialog()"></button>
       </div>
+    </ng-template>
 
-      <!-- Bearbeitungsformular -->
-      <div *ngIf="isEditMode" class="text-white dark:text-white">
-        <div class="mb-3">
-          <label for="name" class="text-neonLime">Name:</label>
-          <input id="name" type="text" [(ngModel)]="customerData.name" class="p-inputtext dark:bg-darkCard dark:text-white"/>
-        </div>
-        <div class="mb-3">
-          <label for="email" class="text-neonLime">Email:</label>
-          <input id="email" type="email" [(ngModel)]="customerData.email" class="p-inputtext dark:bg-darkCard dark:text-white"/>
-        </div>
-        <div class="mb-3">
-          <label for="phone" class="text-neonLime">Telefon:</label>
-          <input id="phone" type="text" [(ngModel)]="customerData.phone" class="p-inputtext dark:bg-darkCard dark:text-white"/>
-        </div>
-        <div class="mb-3">
-          <label for="address" class="text-neonLime">Adresse:</label>
-          <input id="address" type="text" [(ngModel)]="customerData.address" class="p-inputtext dark:bg-darkCard dark:text-white"/>
-        </div>
+    <!-- Tabellenkopf -->
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="customerName">Kundenname <p-sortIcon field="customerName"></p-sortIcon></th>
+        <th>Adresse</th>
+        <th>Region</th>
+      </tr>
+    </ng-template>
 
-        <!-- Buttons zum Speichern und Abbrechen -->
-        <div class="flex gap-3 mt-4">
-          <button pButton label="Speichern" icon="pi pi-check" (click)="saveChanges()"
-            class="p-button-sm text-neonLime"></button>
-          <button pButton label="Abbrechen" icon="pi pi-times" (click)="cancelEdit()"
-            class="p-button-sm text-red-500"></button>
+    <!-- Tabellenkörper -->
+    <ng-template pTemplate="body" let-customer>
+      <tr>
+        <td>{{ customer.customerName}}</td>
+        <td>
+          {{ customer.address.street }},
+          {{ customer.address.houseNumber }},
+          {{ customer.address.postcode }}
+        </td>
+        <td>{{ customer.address.region }}</td>
+      </tr>
+    </ng-template>
+
+    <!-- Leere Nachricht -->
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="3">Keine Kunden gefunden.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <!-- Dialog zum Hinzufügen eines neuen Kunden -->
+  <p-dialog [(visible)]="customerDialog" header="Neuen Kunden hinzufügen" [modal]="true" [closable]="true"
+    [style]="{ width: '800px' }">
+    <div class="grid grid-cols-2 gap-6">
+      <!-- Kundenfelder -->
+      <div>
+        <div class="mb-4">
+          <label for="customerName" class="block font-semibold mb-1">Kundenname *</label>
+          <input id="customerName" type="text" pInputText [(ngModel)]="newCustomer.customerName"
+            class="w-full p-2 border rounded-lg" placeholder="Kundenname eingeben" required />
+        </div>
+        <div *ngIf="(newCustomer.address)" class="border-t">
+
+          <div class="mb-4">
+            <label for="street" class="block font-semibold mb-1">Straße *</label>
+            <input id="street" type="text" pInputText [(ngModel)]="newCustomer.address.street"
+              class="w-full p-2 border rounded-lg" placeholder="Straße eingeben" required />
+          </div>
+          <div class="mb-4">
+            <label for="houseNumber" class="block font-semibold mb-1">Hausnummer *</label>
+            <input id="houseNumber" type="number" pInputText [(ngModel)]="newCustomer.address.houseNumber"
+              class="w-full p-2 border rounded-lg" placeholder="Hausnummer eingeben" required />
+          </div>
+
+          <!-- Region und Postleitzahl -->
+          <div>
+            <div class="mb-4">
+              <label for="postcode" class="block font-semibold mb-1">Postleitzahl *</label>
+              <input id="postcode" type="number" pInputText [(ngModel)]="newCustomer.address.postcode"
+                class="w-full p-2 border rounded-lg" placeholder="Postleitzahl eingeben" required />
+            </div>
+            <div class="mb-4">
+              <label for="region" class="block font-semibold mb-1">Region *</label>
+              <input id="region" type="text" pInputText [(ngModel)]="newCustomer.address.region"
+                class="w-full p-2 border rounded-lg" placeholder="Region eingeben" required />
+            </div>
+          </div>
         </div>
       </div>
-      
     </div>
-  </div>
+
+    <p-footer class="flex justify-end gap-4">
+      <button pButton label="Abbrechen" icon="pi pi-times" class="p-button-text"
+        (click)="hideCustomerDialog()"></button>
+      <button pButton label="Speichern" icon="pi pi-check" class="p-button" (click)="saveCustomer()"></button>
+    </p-footer>
+  </p-dialog>
