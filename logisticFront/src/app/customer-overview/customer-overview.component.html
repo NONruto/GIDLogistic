@@ -22,26 +22,32 @@
         <th pSortableColumn="customerName">Kundenname <p-sortIcon field="customerName"></p-sortIcon></th>
         <th>Adresse</th>
         <th>Region</th>
+        <th>Aktionen</th>
       </tr>
     </ng-template>
 
     <!-- Tabellenkörper -->
     <ng-template pTemplate="body" let-customer>
       <tr>
-        <td>{{ customer.customerName}}</td>
+        <td>{{ customer.customerName }}</td>
         <td>
           {{ customer.address.street }},
           {{ customer.address.houseNumber }},
           {{ customer.address.postcode }}
         </td>
         <td>{{ customer.address.region }}</td>
+        <td>
+          <button pButton label="Bestellungen anzeigen" icon="pi pi-eye" class="p-button-text"
+            (click)="loadOrders(customer.id, customer.customerName)">
+          </button>
+        </td>
       </tr>
     </ng-template>
 
     <!-- Leere Nachricht -->
     <ng-template pTemplate="emptymessage">
       <tr>
-        <td colspan="3">Keine Kunden gefunden.</td>
+        <td colspan="4">Keine Kunden gefunden.</td>
       </tr>
     </ng-template>
   </p-table>
@@ -93,3 +99,42 @@
       <button pButton label="Speichern" icon="pi pi-check" class="p-button" (click)="saveCustomer()"></button>
     </p-footer>
   </p-dialog>
+
+  <p-dialog [(visible)]="orderDialog" header="Bestellungen anzeigen" [modal]="true" [closable]="true"
+  [style]="{ width: '800px' }" appendTo="body">
+  <h2 class="mb-4">Bestellungen für {{ selectedCustomerName }}</h2>
+
+  <!-- PrimeNG Tabelle für Bestellungen -->
+  <p-table [value]="orders" class="bg-white rounded-[15px] overflow-hidden" dataKey="id" scrollable="true"
+    [rows]="5" [rowsPerPageOptions]="[5, 10, 20]" [paginator]="true">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Bestell-ID</th>
+        <th>Name</th>
+        <th>Produkte</th>
+        <th>Info</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-order>
+      <tr>
+        <td>{{ order.id }}</td>
+        <td>{{ order.name }}</td>
+        <td>
+          <ul>
+            <li *ngFor="let product of order.products">{{ product.name }}</li>
+          </ul>
+        </td>
+        <td>{{ order.additionalInformation }}</td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="4" class="text-center">Keine Bestellungen für diesen Kunden gefunden.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <p-footer>
+    <button pButton label="Schließen" icon="pi pi-times" class="p-button-text" (click)="hideOrderDialog()"></button>
+  </p-footer>
+</p-dialog>

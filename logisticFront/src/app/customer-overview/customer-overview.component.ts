@@ -11,6 +11,7 @@ import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { Order } from '../../../swagger/model/order';
 
 @Component({
   selector: 'app-customer-overview',
@@ -38,8 +39,11 @@ import { CommonModule } from '@angular/common';
 })
 export class CustomerOverviewComponent implements OnInit {
   customers: Customer[] = [];
+  orders: Order[] = [];
   loading: boolean = false;
   customerDialog: boolean = false;
+  orderDialog: boolean = false;
+  selectedCustomerName: string = '';
 
   newCustomer: Customer = {
     id: 0, // Beispiel-ID, anpassen nach Modell
@@ -72,6 +76,24 @@ export class CustomerOverviewComponent implements OnInit {
     });
   }
 
+  loadOrders(customerId: number, customerName: string): void {
+    this.loading = true;
+    this.logisticsService.apiGidLogisticsCustomerCustomerIdOrdersGet(customerId).subscribe({
+      next: (response) => {
+        this.orders = response.body || []; // Leere Liste, wenn keine Bestellungen gefunden wurden
+        this.selectedCustomerName = customerName;
+        this.orderDialog = true; // Dialog bleibt immer offen
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Fehler beim Laden der Bestellungen:', err);
+        this.orders = []; // Fehlerfall: Leere Bestellliste
+        this.orderDialog = true; // Dialog bleibt offen
+        this.loading = false;
+      },
+    });
+  }
+
   /**
    * Öffnet den Dialog zum Hinzufügen eines neuen Kunden
    */
@@ -95,6 +117,10 @@ export class CustomerOverviewComponent implements OnInit {
    */
   hideCustomerDialog(): void {
     this.customerDialog = false;
+  }
+
+    hideOrderDialog(): void {
+    this.orderDialog = false;
   }
 
   /**

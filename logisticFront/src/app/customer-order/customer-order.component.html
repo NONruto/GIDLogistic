@@ -1,0 +1,90 @@
+<div class="flex justify-between mb-4">
+    <!-- Kundenauswahl -->
+    <p-dropdown 
+      [options]="customers" 
+      [(ngModel)]="selectedCustomer" 
+      optionLabel="customerName" 
+      placeholder="Kunden auswählen" 
+      class="w-1/4">
+    </p-dropdown>
+  </div>
+  
+  <!-- Produktliste -->
+  <p-table 
+    [value]="products" 
+    [(selection)]="selectedProducts" 
+    dataKey="id" 
+    selectionMode="multiple"
+    select
+    [paginator]="true" 
+    [rows]="5" 
+    [rowsPerPageOptions]="[5, 10, 20]" 
+    [tableStyle]="{ 'min-width': '50rem' }" 
+    class="bg-white rounded-[15px] overflow-hidden m-[15px] w-full">
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 4rem"><p-tableHeaderCheckbox /></th>
+        <th pSortableColumn="name">Produktname <p-sortIcon field="name"></p-sortIcon></th>
+        <th pSortableColumn="price">Preis <p-sortIcon field="price"></p-sortIcon></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-product>
+      <tr [pSelectableRow]="product">
+        <td>
+            <p-tableCheckbox [value]="product" />
+        </td>
+        <td>{{ product.productName }}</td>
+        <td>{{ product.price | currency:'EUR' }}</td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="3">Keine Produkte gefunden.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+  
+  <!-- Bestellbutton -->
+  <div class="flex justify-end">
+    <button 
+      pButton 
+      label="Produkte bestellen" 
+      icon="pi pi-shopping-cart" 
+      class="p-button-success" 
+      (click)="openOrderDialog()">
+    </button>
+  </div>
+  
+  <!-- Bestelldialog -->
+  <p-dialog 
+    [(visible)]="orderDialog" 
+    header="Bestellung bestätigen" 
+    [modal]="true" 
+    [closable]="true" 
+    [style]="{ width: '500px' }">
+    <h2 class="text-lg font-semibold mb-4">Bestellübersicht</h2>
+  
+    <ul>
+      <li *ngFor="let product of selectedProducts">
+        {{ product.productName }} - {{ product.price | currency:'EUR' }}
+      </li>
+    </ul>
+  
+    <p-footer>
+      <button 
+        pButton 
+        label="Abbrechen" 
+        icon="pi pi-times" 
+        class="p-button-text" 
+        (click)="hideOrderDialog()">
+      </button>
+      <button 
+        pButton 
+        label="Bestellen" 
+        icon="pi pi-check" 
+        class="p-button-success" 
+        (click)="placeOrder()">
+      </button>
+    </p-footer>
+  </p-dialog>
+  
