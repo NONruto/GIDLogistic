@@ -1,1 +1,71 @@
-<p>order works!</p>
+    <!-- Header -->
+    <!-- Auftragstabelle -->
+    <p-table 
+      [value]="orders" 
+      [paginator]="true" 
+      [rows]="5" 
+      [rowsPerPageOptions]="[5, 10, 20]" 
+      [tableStyle]="{ 'min-width': '60rem' }" 
+      class="bg-white rounded-[15px] overflow-hidden m-[15px] w-[98%] h-full">
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="id">Auftrags-ID <p-sortIcon field="id"></p-sortIcon></th>
+          <th pSortableColumn="customerName">Kunde <p-sortIcon field="customerName"></p-sortIcon></th>
+          <th pSortableColumn="productCount">Produkte <p-sortIcon field="productCount"></p-sortIcon></th>
+          <th pSortableColumn="orderInfo">Informationen <p-sortIcon field="orderInfo"></p-sortIcon></th>
+          <th>Aktionen</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-order>
+        <tr>
+          <td>{{ order.id }}</td>
+          <td>{{ order.customerName }}</td>
+          <td>{{ order.productCount }}</td>
+          <td>{{ order.additionalInformatione }}</td>
+          <td>
+            <button 
+              pButton 
+              icon="pi pi-eye" 
+              class="p-button-text p-button-info mr-2" 
+              (click)="viewOrderDetails(order)">
+            </button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5">Keine Aufträge gefunden.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  
+    <!-- Auftragsdetails-Dialog -->
+    <p-dialog 
+      [(visible)]="orderDialog" 
+      header="Auftragsdetails" 
+      [modal]="true" 
+      [closable]="true" 
+      [style]="{ width: '500px' }">
+      <h2 class="text-lg font-semibold mb-4">Details für Auftrag #{{ selectedOrder?.id }}</h2>
+  
+      <ul *ngIf="selectedOrder">
+        <li><strong>Kunde:</strong> {{ selectedOrder.customer?.customerName }}</li>
+        <li><strong>Produkte:</strong>
+          <ul>
+            <li *ngFor="let product of selectedOrder.products">{{ product.productName }} - {{ product.price | currency:'EUR' }}</li>
+          </ul>
+        </li>
+        <li><strong>Informationen</strong> {{ selectedOrder.additionalInformatione}}</li>
+      </ul>
+  
+      <p-footer>
+        <button 
+          pButton 
+          label="Schließen" 
+          icon="pi pi-times" 
+          class="p-button-text" 
+          (click)="hideOrderDialog()">
+        </button>
+      </p-footer>
+    </p-dialog>
+  
