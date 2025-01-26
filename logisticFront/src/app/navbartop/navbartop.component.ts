@@ -31,6 +31,7 @@ export class NavbartopComponent {
     if (this.searchTerm.trim()) {
       this.gidLogisticService.apiGidLogisticsGlobalSearchGet(this.searchTerm).subscribe(results => {
             this.searchResults = results;
+            console.log("global search results: ", results);
         });
     } else {
       this.searchResults = [];

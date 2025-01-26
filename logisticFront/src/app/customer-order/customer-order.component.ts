@@ -72,6 +72,7 @@ export class CustomerOrderComponent implements OnInit {
       products: this.selectedProducts,
       name: 'Bestellung von ' + this.selectedCustomer.customerName + " "  + new Date().toLocaleString(),
       customer: this.selectedCustomer,
+      additionalInformatione: '00340434777752003817',
     };
 
     this.logisticsService.apiGidLogisticsCreateOrderPost(order).subscribe({
