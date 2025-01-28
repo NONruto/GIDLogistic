@@ -19,7 +19,17 @@ export class LoginComponent {
   rememberMe: boolean = false;
 
   constructor(private acoountService: AccountService, private router:Router) {}
-
+/**
+ * Handles the login process by calling the account service to authenticate the user.
+ * 
+ * This method sends the provided `username` and `password` to the `acoountService` 
+ * for authentication. Upon receiving the response:
+ * - If the login is successful (status code 200), it logs a success message and 
+ *   redirects the user to the '/dashboard' route.
+ * - In case of failure, it logs an error message.
+ * 
+ * Additionally, it logs the response for debugging purposes.
+ */
   onLogin(): void {
     this.acoountService.apiAccountLoginGet(this.username, this.password)
       .subscribe(

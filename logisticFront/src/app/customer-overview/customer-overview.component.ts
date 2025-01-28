@@ -75,7 +75,21 @@ export class CustomerOverviewComponent implements OnInit {
       this.loading = false;
     });
   }
-
+/**
+ * Loads orders for a specific customer by their ID and displays them in a dialog.
+ * 
+ * This method fetches orders for the given `customerId` using the 
+ * `apiGidLogisticsCustomerCustomerIdOrdersGet` API endpoint. It sets up the component's state
+ * as follows:
+ * - If the request is successful, the `orders` list is populated with the response data, 
+ *   and the `selectedCustomerName` is set to the provided `customerName`. 
+ *   The order dialog is displayed, and the loading indicator is turned off.
+ * - If the request fails, an error message is logged, and the `orders` list is cleared. 
+ *   The dialog is still displayed to the user, and the loading indicator is hidden.
+ * 
+ * @param customerId The ID of the customer whose orders are to be loaded.
+ * @param customerName The name of the customer, used for displaying the selected customer's name.
+ */
   loadOrders(customerId: number, customerName: string): void {
     this.loading = true;
     this.logisticsService.apiGidLogisticsCustomerCustomerIdOrdersGet(customerId).subscribe({

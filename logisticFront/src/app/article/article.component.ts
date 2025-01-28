@@ -100,7 +100,22 @@ export class ArticleComponent {
     this.supplierDialog = false;
   }
 
-  // Neues Produkt speichern
+  /**
+ * Saves a new product by validating the input data and sending it to the backend.
+ * 
+ * This method:
+ * - First checks that the `newSupplier` object contains the required address fields 
+ *   (name, street, house number, postcode, and region) before assigning it to the product.
+ * - Then, it ensures that the `newProduct` has all the necessary fields filled out 
+ *   (product name, description, inventory, price, and supplier).
+ * - If the product is valid, it sends the `newProduct` data to the backend using the 
+ *   `apiGidLogisticsCreateProductPost` API endpoint.
+ * - On successful product creation, it reloads the product table data and logs the response.
+ * - In case of an error during the API call, it logs the error to the console.
+ * - If any of the required fields are missing, an alert is shown to the user.
+ * 
+ * @returns {void} This method doesn't return any value.
+ */
   saveProduct() {
     if (this.newSupplier.name && this.newSupplier.address && this.newSupplier.address.street && this.newSupplier.address.houseNumber && this.newSupplier.address.postcode && this.newSupplier.address.region) {
       this.newProduct.supplier = this.newSupplier;

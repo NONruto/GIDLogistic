@@ -63,7 +63,20 @@ export class CustomerOrderComponent implements OnInit {
   hideOrderDialog(): void {
     this.orderDialog = false;
   }
-
+/**
+ * Places a new order for the selected customer with the currently selected products.
+ * 
+ * This method:
+ * - Checks if a `selectedCustomer` is available.
+ * - Creates a new order object with the `selectedProducts`, the customer's name, 
+ *   and a unique order name based on the current date and time.
+ * - Sends the order to the backend using the `apiGidLogisticsCreateOrderPost` API endpoint.
+ * - If the order is successfully placed, an alert is shown to the user, the selected products are cleared, 
+ *   and the order dialog is closed.
+ * - If the order placement fails, an error message is logged to the console.
+ * 
+ * @returns {void} This method doesn't return any value.
+ */
   placeOrder(): void {
     if (!this.selectedCustomer) return;
 

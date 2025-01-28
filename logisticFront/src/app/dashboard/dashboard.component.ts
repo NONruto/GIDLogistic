@@ -35,7 +35,24 @@ export class DashboardComponent implements OnInit {
   constructor(private productService: GidLogisticsService) { 
 
   }
-
+/**
+ * Initializes the component by setting up initial data and making API calls 
+ * to fetch customer, product, and supplier information.
+ * 
+ * Initially, mock data is provided for `customers`, `products`, and `suppliers`, 
+ * which will later be replaced by actual data fetched from API calls:
+ * - `customers` contains a list of customer objects with basic address information.
+ * - `products` includes a list of products with inventory, price, and description.
+ * - `suppliers` lists supplier details, including address.
+ * 
+ * API calls are made to fetch real data for:
+ * - Products from the `apiGidLogisticsProductsGet` endpoint.
+ * - Suppliers from the `apiGidLogisticsSupplierGet` endpoint.
+ * - Customers from the `apiGidLogisticsCustomerGet` endpoint.
+ * 
+ * The results of the API calls are logged to the console and used to update 
+ * the component's state.
+ */
   ngOnInit(): void {
     // Beispiel-Daten (später durch API-Aufrufe ersetzt)
     this.customers = [

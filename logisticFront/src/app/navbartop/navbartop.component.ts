@@ -26,7 +26,15 @@ export class NavbartopComponent {
     const currentUrl = this.router.url;
     return currentUrl !== '' && currentUrl !== '/' && currentUrl !== '/login';
   }
-
+/**
+ * Initiates a global search using the search term and updates the search results.
+ * 
+ * If the `searchTerm` is not empty or only whitespace, it triggers a call to the 
+ * `gidLogisticService` to fetch the search results. The results are stored in 
+ * the `searchResults` variable and logged to the console.
+ * 
+ * If the `searchTerm` is empty or only whitespace, the `searchResults` is cleared.
+ */
   onSearch(): void {
     if (this.searchTerm.trim()) {
       this.gidLogisticService.apiGidLogisticsGlobalSearchGet(this.searchTerm).subscribe(results => {

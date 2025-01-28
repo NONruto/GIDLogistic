@@ -45,7 +45,22 @@ export class OrderComponent implements OnInit {
       this.orders = data.body || [];
     });
   }
-
+/**
+ * Displays the details of the selected order and retrieves tracking information
+ * from an external service if available.
+ * 
+ * @param order The order object that contains the order details, including any
+ *        additional information such as a tracking number.
+ * 
+ * This method:
+ * - Sets the `selectedOrder` to the passed order object.
+ * - Opens the order details dialog by setting `orderDialog` to true.
+ * - Checks if additional tracking information is available in the order.
+ * - If tracking information exists, it calls the `trackingService` to fetch tracking details.
+ * - Displays loading state while fetching the tracking info and handles success/error responses.
+ * - On success, it stores the tracking data in `shipmentTracking` and stops the loading state.
+ * - On error, it logs the error and stops the loading state.
+ */
   viewOrderDetails(order: Order) {
     this.selectedOrder = order;
     this.orderDialog = true;
